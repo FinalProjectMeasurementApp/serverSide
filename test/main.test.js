@@ -4,14 +4,15 @@ const mongoose = require("mongoose");
 const { shape } = require("../models");
 const { areaCalculator } = require("../controllers/areaCalculator");
 const should = chai.should();
-const url = "http://localhost:8000";
+const app = require("../app");
 
 chai.use(chaiHttp);
 
 describe("GET /shape", function() {
   it("should have status 200", function(done) {
+    this.timeout(5000);
     chai
-      .request(url)
+      .request(app)
       .get("/shape")
       .end(function(err, res) {
         res.should.have.status(200);
@@ -22,7 +23,7 @@ describe("GET /shape", function() {
 
   it("should have list of shapes", function(done) {
     chai
-      .request(url)
+      .request(app)
       .get("/shape")
       .end(function(err, res) {
         res.body.should.be.a("array");
@@ -37,10 +38,24 @@ describe("GET /shape", function() {
 
 describe("POST /shape/add", function() {
   let mockPayload = { name: "test", perimeter: 100, area: 100 };
+  let mockErrorPayload = { name: "test", perimeter: 100 };
   let shapeId;
+  it("should not add new item", function(done) {
+    chai
+      .request(app)
+      .post("/shape/add")
+      .send(mockErrorPayload)
+      .end(function(err, res) {
+        res.should.have.status(400);
+        res.body.should.be.a("object");
+        res.body.errors.should.be.a("object");
+        done();
+      });
+  });
+
   it("should return new item", function(done) {
     chai
-      .request(url)
+      .request(app)
       .post("/shape/add")
       .send(mockPayload)
       .end(function(err, res) {
@@ -56,14 +71,37 @@ describe("POST /shape/add", function() {
   });
 
   describe("PUT /shape/update/:shapeId", function() {
+    it("should not have return updated shape", function(done) {
+      let mockErrorUpdatePayload = {
+        name: "updated test",
+        perimeter: "string",
+        area: 200,
+        coordinates: []
+      };
+      chai
+        .request(app)
+        .put(`/shape/update/${shapeId}`)
+        .send(mockErrorUpdatePayload)
+        .end(function(err, res) {
+          if (err) {
+            console.log(err);
+            done();
+          }
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          done();
+        });
+    });
+
     it("should have return updated shape", function(done) {
       let mockUpdatePayload = {
         name: "updated test",
         perimeter: 200,
         area: 200
       };
+      this.timeout(5000);
       chai
-        .request(url)
+        .request(app)
         .put(`/shape/update/${shapeId}`)
         .send(mockUpdatePayload)
         .end(function(err, res) {
@@ -77,16 +115,32 @@ describe("POST /shape/add", function() {
           res.body.perimeter.should.equal(200);
           res.body.area.should.equal(200);
           res.body.coordinates.should.be.a("array");
-
           done();
         });
     });
   });
 
   describe("DELETE /shape/delete/:shapeId", function() {
-    it("should have return deleted shape", function(done) {
+    it("should not have return deleted shape", function(done) {
       chai
-        .request(url)
+        .request(app)
+        .delete(`/shape/delete/123`)
+        .end(function(err, res) {
+          if (err) {
+            console.log(err);
+            done();
+          }
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+
+          done();
+        });
+    });
+
+    it("should have return deleted shape", function(done) {
+      this.timeout(5000);
+      chai
+        .request(app)
         .delete(`/shape/delete/${shapeId}`)
         .end(function(err, res) {
           if (err) {
@@ -99,6 +153,10 @@ describe("POST /shape/add", function() {
           res.body.perimeter.should.equal(200);
           res.body.area.should.equal(200);
           res.body.coordinates.should.be.a("array");
+
+          mongoose.connection.close(function() {
+            console.log("Mongoose connection disconnected");
+          });
 
           done();
         });
