@@ -1,0 +1,135 @@
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const mongoose = require("mongoose");
+const { shape } = require("../models");
+const { areaCalculator } = require("../controllers/areaCalculator");
+const should = chai.should();
+const url = "http://localhost:8000";
+
+chai.use(chaiHttp);
+
+describe("GET /shape", function() {
+  it("should have status 200", function(done) {
+    chai
+      .request(url)
+      .get("/shape")
+      .end(function(err, res) {
+        res.should.have.status(200);
+        res.body.should.be.a("array");
+        done();
+      });
+  });
+
+  it("should have list of shapes", function(done) {
+    chai
+      .request(url)
+      .get("/shape")
+      .end(function(err, res) {
+        res.body.should.be.a("array");
+        res.body[0].name.should.be.a("string");
+        res.body[0].perimeter.should.be.a("number");
+        res.body[0].area.should.be.a("number");
+        res.body[0].coordinates.should.be.a("array");
+        done();
+      });
+  });
+});
+
+describe("POST /shape/add", function() {
+  let mockPayload = { name: "test", perimeter: 100, area: 100 };
+  let shapeId;
+  it("should return new item", function(done) {
+    chai
+      .request(url)
+      .post("/shape/add")
+      .send(mockPayload)
+      .end(function(err, res) {
+        shapeId = res.body._id;
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.body.name.should.equal("test");
+        res.body.perimeter.should.equal(100);
+        res.body.area.should.equal(100);
+        res.body.coordinates.should.be.a("array");
+        done();
+      });
+  });
+
+  describe("PUT /shape/update/:shapeId", function() {
+    it("should have return updated shape", function(done) {
+      let mockUpdatePayload = {
+        name: "updated test",
+        perimeter: 200,
+        area: 200
+      };
+      chai
+        .request(url)
+        .put(`/shape/update/${shapeId}`)
+        .send(mockUpdatePayload)
+        .end(function(err, res) {
+          if (err) {
+            console.log(err);
+            done();
+          }
+          res.should.have.status(200);
+
+          res.body.name.should.equal("updated test");
+          res.body.perimeter.should.equal(200);
+          res.body.area.should.equal(200);
+          res.body.coordinates.should.be.a("array");
+
+          done();
+        });
+    });
+  });
+
+  describe("DELETE /shape/delete/:shapeId", function() {
+    it("should have return deleted shape", function(done) {
+      chai
+        .request(url)
+        .delete(`/shape/delete/${shapeId}`)
+        .end(function(err, res) {
+          if (err) {
+            console.log(err);
+            done();
+          }
+          res.should.have.status(200);
+
+          res.body.name.should.equal("updated test");
+          res.body.perimeter.should.equal(200);
+          res.body.area.should.equal(200);
+          res.body.coordinates.should.be.a("array");
+
+          done();
+        });
+    });
+  });
+});
+
+describe("area calculator", function() {
+  it(`area of
+   _____      _____
+  |     |    |     |
+  |     |____|     |
+  |                |
+  |________________|
+  
+  should be 20
+
+  `, function(done) {
+    let arrayOfCoordinates = [
+      [1, 6],
+      [3, 6],
+      [3, 4],
+      [5, 4],
+      [5, 6],
+      [7, 6],
+      [7, 2],
+      [1, 2]
+    ];
+    let area = areaCalculator(arrayOfCoordinates);
+    area.should.be.a("number");
+    area.should.be.equal(20);
+    done();
+  });
+});
