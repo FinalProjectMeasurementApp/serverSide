@@ -3,6 +3,7 @@ const Shape = require("../models/shape");
 module.exports = {
   getAllSavedShapes: (req, res, next) => {
     Shape.find({})
+      .populate("user")
       .sort({ createdAt: "desc" })
       .then(shape => {
         res.status(200).send(shape);

@@ -1,8 +1,10 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const mongoose = require("mongoose");
-const { shape } = require("../models");
+const { shape} = require("../models");
+const User = require("../models/user.js")
 const { areaCalculator } = require("../controllers/areaCalculator");
+const { userCalculator } = require("../controllers/userController");
 const should = chai.should();
 const app = require("../app");
 
@@ -189,5 +191,89 @@ describe("area calculator", function() {
     area.should.be.a("number");
     area.should.be.equal(20);
     done();
+  });
+});
+
+describe("GET /user", function() {
+  it("should have status 200", function(done) {
+    this.timeout(5000);
+    chai
+      .request(app)
+      .get("/user")
+      .end(function(err, res) {
+        res.should.have.status(200);
+        res.body.should.be.a("array");
+        done();
+      });
+  });
+
+  it("should have list of user", function(done) {
+    chai
+      .request(app)
+      .get("/user")
+      .end(function(err, res) {
+        res.body.should.be.a("array");
+        res.body[0].username.should.be.a("string");
+        done();
+      });
+  });
+});
+
+describe('POST/user/add', () => {
+  it('it should POST new user', (done) => {
+    let user = new User({
+      username: "test",
+    })
+    chai.request(app)
+      .post('/user')
+      .send(user)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.username.should.equal("test");
+        res.body.should.be.a('object');
+        res.body.should.have.property('message');
+        res.body.should.have.property('data');
+        res.body.data.should.have.property('_id');
+        res.body.data.should.have.property('username');
+        res.body.data.should.have.property('createdAt');
+        res.body.data.should.have.property('updatedAt');
+        done();
+      })
+  })
+});
+
+describe("DELETE /user/delete/:userId", function() {
+  it("should not have return deleted user", function(done) {
+    chai
+      .request(app)
+      .delete(`/user/delete/123`)
+      .end(function(err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        res.should.have.status(400);
+        res.body.should.be.a("object");
+        done();
+      });
+  });
+
+  it("should have return deleted user", function(done) {
+    this.timeout(5000);
+    chai
+      .request(app)
+      .delete(`/user/delete/123`)
+      .end(function(err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        res.should.have.status(200);
+        res.body.username.should.equal("test");
+        mongoose.connection.close(function() {
+          console.log("Mongoose connection disconnected");
+        });
+        done();
+      });
   });
 });

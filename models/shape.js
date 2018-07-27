@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const shapeSchema = new Schema(
   {
+    username: { type: String , required: true},
     name: { type: String, required: true },
     area: { type: Number, required: true },
     perimeter: { type: Number, required: true },
