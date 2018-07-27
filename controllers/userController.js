@@ -3,7 +3,6 @@ const User = require("../models/user");
 module.exports = {
   getAllUser: (req, res, next) => {
     User.find({})
-      .populate("user")
       .sort({ createdAt: "desc" })
       .then(user => {
         res.status(200).send(user);
