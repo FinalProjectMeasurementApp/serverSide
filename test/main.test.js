@@ -1,9 +1,10 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const mongoose = require("mongoose");
-const { shape, username } = require("../models");
+const { shape, username, floor } = require("../models");
 const { areaCalculator } = require("../controllers/areaCalculator");
 const { userCalculator } = require("../controllers/userController");
+const { floorCalculator } = require("../controllers/userController");
 const should = chai.should();
 const app = require("../app");
 
@@ -111,7 +112,6 @@ describe("POST /shape/add", function () {
             done();
           }
           res.should.have.status(200);
-
           res.body.name.should.equal("updated test");
           res.body.perimeter.should.equal(200);
           res.body.area.should.equal(200);
@@ -148,13 +148,10 @@ describe("POST /shape/add", function () {
             done();
           }
           res.should.have.status(200);
-
           res.body.name.should.equal("updated test");
           res.body.perimeter.should.equal(200);
           res.body.area.should.equal(200);
           res.body.coordinates.should.be.a("array");
-
-
           done();
         });
     });
@@ -191,7 +188,7 @@ describe("area calculator", function () {
 
 describe("GET /user", function () {
   it("should have status 200", function (done) {
-    this.timeout(10000);
+    this.timeout(5000);
     chai
       .request(app)
       .get("/user")
@@ -278,11 +275,112 @@ describe("DELETE /user/delete/:userId", function () {
         }
         res.should.have.status(200);
         res.body.username.should.equal("test");
+        done();
+      });
+  });
+});
 
+describe("GET /floor", function () {
+  it("should have status 200", function (done) {
+    this.timeout(5000);
+    chai
+      .request(app)
+      .get("/floor")
+      .end(function (err, res) {
+        res.should.have.status(200);
+        res.body.should.be.a("array");
+        done();
+      });
+  });
+
+  it("should have list of floor", function (done) {
+    chai
+      .request(app)
+      .get("/floor")
+      .end(function (err, res) {
+        res.body.should.be.a("array");
+        res.body[0].type.should.be.a("string");
+        res.body[0].area.should.be.a("number");
+        res.body[0].price.should.be.a("number");
+        done();
+      });
+  });
+});
+
+let floorId;
+describe("POST /floor/add", function () {
+  let floorPayload ={
+    type: "anatolia",
+    price: 100, 
+    area: 100
+  };
+  let floorErrorPayload = {
+    type: "anatolia",
+    price: 100
+  };
+
+  it("should not add new floor", function (done) {
+    chai
+      .request(app)
+      .post("/floor/add")
+      .send(floorErrorPayload)
+      .end(function (err, res) {
+        res.should.have.status(400);
+        res.body.should.be.a("object");
+        res.body.errors.should.be.a("object");
+        done();
+      });
+  });
+  it("should return new floor", function (done) {
+    chai
+      .request(app)
+      .post("/floor/add")
+      .send(floorPayload)
+      .end(function (err, res) {
+        floorId = res.body._id;
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.body.type.should.equal("anatolia");
+        res.body.price.should.equal(100);
+        res.body.area.should.equal(100);
+        done();
+      });
+  });
+});
+
+describe("DELETE /floor/delete/:floorId", function () {
+  it("should not have return deleted floor", function (done) {
+    chai
+      .request(app)
+      .delete(`/floor/delete/123`)
+      .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        res.should.have.status(400);
+        res.body.should.be.a("object");
+        done();
+      });
+  });
+
+  it("should have return deleted floor", function (done) {
+    this.timeout(5000);
+    chai
+      .request(app)
+      .delete(`/floor/delete/${floorId}`)
+      .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        res.should.have.status(200);
+        res.body.type.should.equal("anatolia");
+        res.body.price.should.equal(100);
+        res.body.area.should.equal(100);
         mongoose.connection.close(function () {
           console.log("Mongoose connection disconnected");
         });
-
         done();
       });
   });
