@@ -1,23 +1,23 @@
 require("dotenv").config({ path: "./.env" });
-const createError = require("http-errors");
-const express = require("express");
-const mongoose = require("mongoose");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-var cors = require('cors')
+const createError              = require("http-errors");
+const express                  = require("express");
+const app                      = express();
+const mongoose                 = require("mongoose");
+const path                     = require("path");
+const cookieParser             = require("cookie-parser");
+const logger                   = require("morgan");
+const cors                     = require('cors')
 
-const indexRouter = require("./routes/index");
-const floorsRouter = require("./routes/floors");
-const wallsRouter = require("./routes/walls");
-const usersRouter = require("./routes/users");
-const shapeRouter = require("./routes/shapes");
+// routes
+const indexRouter              = require("./routes/index");
+const floorsRouter             = require("./routes/floors");
+const wallsRouter              = require("./routes/walls");
+const usersRouter              = require("./routes/users");
+const shapeRouter              = require("./routes/shapes");
 
-const app = express();
-
-const { DB_USER, DB_PASS } = process.env;
-const url = `mongodb://${DB_USER}:${DB_PASS}@ds249311.mlab.com:49311/measurement`;
-
+// connect mongose database
+const { DB_USER, DB_PASS }     = process.env;
+const url                      = `mongodb://${DB_USER}:${DB_PASS}@ds249311.mlab.com:49311/measurement`;
 mongoose
   .connect(
     url,

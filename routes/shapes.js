@@ -1,15 +1,16 @@
-var express = require('express');
-var router = express.Router();
-var {getAllSavedShapes,updateShapeData,addNewShapeData,deleteShapeData} = require ('../controllers/shape-controller')
+const express = require('express');
+const router  = express.Router();
+const {
+  getAllSavedShapes,
+  updateShapeData,
+  addNewShapeData,
+  deleteShapeData
+} = require ('../controllers/shape-controller')
 
-/* GET users listing. */
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
-
-router.get('/',getAllSavedShapes)
-router.post('/add',addNewShapeData)
-router.delete('/delete/:id',deleteShapeData)
-router.put('/update/:id',updateShapeData)
+router
+  .get('/',getAllSavedShapes)
+  .post('/add',addNewShapeData)
+  .delete('/delete/:id',deleteShapeData)
+  .put('/update/:id',updateShapeData)
 
 module.exports = router;

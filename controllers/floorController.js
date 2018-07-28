@@ -2,7 +2,8 @@ const Floor = require("../models/floor");
 
 module.exports = {
   getAllFloor: (req, res, next) => {
-    Floor.find({})
+    Floor
+      .find({})
       .sort({ createdAt: "desc" })
       .then(floor => {
         res.status(200).send(floor);
@@ -30,7 +31,8 @@ module.exports = {
   },
 
   deleteFloor: (req, res, next) => {
-    Floor.findByIdAndRemove(req.params.id)
+    Floor
+      .findByIdAndRemove(req.params.id)
       .then(floor => {
         res.status(200).send(floor);
       })
