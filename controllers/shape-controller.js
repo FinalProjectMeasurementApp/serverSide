@@ -2,7 +2,8 @@ const Shape = require("../models/shape");
 
 module.exports = {
   getAllSavedShapes: (req, res, next) => {
-    Shape.find({})
+    Shape
+      .find({})
       .populate("user")
       .sort({ createdAt: "desc" })
       .then(shape => {
@@ -33,7 +34,8 @@ module.exports = {
   },
 
   deleteShapeData: (req, res, next) => {
-    Shape.findByIdAndRemove(req.params.id)
+    Shape
+      .findByIdAndRemove(req.params.id)
       .then(shape => {
         res.status(200).send(shape);
       })

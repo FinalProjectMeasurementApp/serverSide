@@ -1,14 +1,14 @@
-var express = require('express');
-var router = express.Router();
-var {getAllFloor,addNewFloor,deleteFloor} = require ('../controllers/floorController')
+const express = require('express');
+const router  = express.Router();
+const {
+  getAllFloor,
+  addNewFloor,
+  deleteFloor
+} = require ('../controllers/floorController')
 
-/* GET users listing. */
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
-
-router.get('/',getAllFloor)
-router.post('/add',addNewFloor)
-router.delete('/delete/:id',deleteFloor)
+router
+  .get('/',getAllFloor)
+  .post('/add',addNewFloor)
+  .delete('/delete/:id',deleteFloor)
 
 module.exports = router;

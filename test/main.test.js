@@ -1,12 +1,12 @@
-const chai = require("chai");
-const chaiHttp = require("chai-http");
-const mongoose = require("mongoose");
+const chai                             = require("chai");
+const chaiHttp                         = require("chai-http");
+const mongoose                         = require("mongoose");
 const { shape, username, wall, floor } = require("../models");
-const { areaCalculator } = require("../controllers/areaCalculator");
-const { userCalculator } = require("../controllers/userController");
-const { floorCalculator } = require("../controllers/userController");
-const should = chai.should();
-const app = require("../app");
+const { areaCalculator }               = require("../controllers/areaCalculator");
+const { userCalculator }               = require("../controllers/userController");
+const { floorCalculator }              = require("../controllers/userController");
+const should                           = chai.should();
+const app                              = require("../app");
 
 chai.use(chaiHttp);
 

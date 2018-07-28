@@ -3,11 +3,19 @@ const Schema = mongoose.Schema;
 
 const floorSchema = new Schema(
   {
-    type: { type: String, required: true},
-    area: { type: Number, required: true },
-    price: { type: Number, required: true }
+    type: { 
+      type: String, required: true
+    },
+    area: { 
+      type: Number, required: true 
+    },
+    price: { 
+      type: Number, required: true 
+    }
   },
-  { timestamps: true }
+  { 
+    timestamps: true 
+  }
 );
 
 mongoose.model("floor", floorSchema);

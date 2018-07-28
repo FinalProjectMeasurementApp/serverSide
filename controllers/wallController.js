@@ -2,7 +2,8 @@ const Wall = require("../models/wall");
 
 module.exports = {
   getAllWall: (req, res, next) => {
-    Wall.find({})
+    Wall
+      .find({})
       .sort({ createdAt: "desc" })
       .then(wall => {
         res.status(200).send(wall);
@@ -30,7 +31,8 @@ module.exports = {
   },
 
   deleteWall: (req, res, next) => {
-    Wall.findByIdAndRemove(req.params.id)
+    Wall
+      .findByIdAndRemove(req.params.id)
       .then(wall => {
         res.status(200).send(wall);
       })
