@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const mongoose = require("mongoose");
-const { shape, username, floor } = require("../models");
+const { shape, username, wall, floor } = require("../models");
 const { areaCalculator } = require("../controllers/areaCalculator");
 const { userCalculator } = require("../controllers/userController");
 const { floorCalculator } = require("../controllers/userController");
@@ -376,6 +376,111 @@ describe("DELETE /floor/delete/:floorId", function () {
         }
         res.should.have.status(200);
         res.body.type.should.equal("anatolia");
+        res.body.price.should.equal(100);
+        res.body.area.should.equal(100);
+        done();
+      });
+  });
+});
+
+//------------//
+
+describe("GET /wall", function () {
+  it("should have status 200", function (done) {
+    this.timeout(5000);
+    chai
+      .request(app)
+      .get("/wall")
+      .end(function (err, res) {
+        res.should.have.status(200);
+        res.body.should.be.a("array");
+        done();
+      });
+  });
+
+  it("should have list of wall", function (done) {
+    chai
+      .request(app)
+      .get("/wall")
+      .end(function (err, res) {
+        res.body.should.be.a("array");
+        res.body[0].type.should.be.a("string");
+        res.body[0].area.should.be.a("number");
+        res.body[0].price.should.be.a("number");
+        done();
+      });
+  });
+});
+
+let wallId;
+describe("POST /wall/add", function () {
+  let wallPayload ={
+    type: "paint",
+    price: 100, 
+    area: 100
+  };
+  let wallErrorPayload = {
+    type: "paint",
+    price: 100
+  };
+
+  it("should not add new wall", function (done) {
+    chai
+      .request(app)
+      .post("/wall/add")
+      .send(wallErrorPayload)
+      .end(function (err, res) {
+        res.should.have.status(400);
+        res.body.should.be.a("object");
+        res.body.errors.should.be.a("object");
+        done();
+      });
+  });
+  it("should return new wall", function (done) {
+    chai
+      .request(app)
+      .post("/wall/add")
+      .send(wallPayload)
+      .end(function (err, res) {
+        wallId = res.body._id;
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.body.type.should.equal("paint");
+        res.body.price.should.equal(100);
+        res.body.area.should.equal(100);
+        done();
+      });
+  });
+});
+
+describe("DELETE /wall/delete/:wallId", function () {
+  it("should not have return deleted wall", function (done) {
+    chai
+      .request(app)
+      .delete(`/wall/delete/123`)
+      .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        res.should.have.status(400);
+        res.body.should.be.a("object");
+        done();
+      });
+  });
+
+  it("should have return deleted wall", function (done) {
+    this.timeout(5000);
+    chai
+      .request(app)
+      .delete(`/wall/delete/${wallId}`)
+      .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        res.should.have.status(200);
+        res.body.type.should.equal("paint");
         res.body.price.should.equal(100);
         res.body.area.should.equal(100);
         mongoose.connection.close(function () {
