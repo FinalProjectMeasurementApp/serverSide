@@ -63,19 +63,6 @@ describe("GET /shape", function () {
   });
 });
 
-describe("GET /shape", function () {
-  it("should have status 400", function (done) {
-    setTimeout(done, 1000);
-    chai
-      .request(app)
-      .get('/shapes')
-      .catch(err => err.response)
-      .then(res => {
-        res.should.have.status(400);
-      })
-  });
-});
-
 describe("POST /shape/add", function () {
   let mockPayload = { 
     name: "test", 
@@ -289,19 +276,6 @@ describe("GET /user", function () {
   });
 });
 
-describe("GET /user", function () {
-  it("should have status 400", function (done) {
-    setTimeout(done, 1000);
-    chai
-      .request(app)
-      .get('/users')
-      .catch(err => err.response)
-      .then(res => {
-        res.should.have.status(400);
-      })
-  });
-});
-
 let userId;
 describe("POST /user/add", function () {
   let userPayload = {
@@ -414,19 +388,6 @@ describe("GET /floor", function () {
   });
 });
 
-describe("GET /floor", function () {
-  it("should have status 400", function (done) {
-    setTimeout(done, 1000);
-    chai
-      .request(app)
-      .get('/floors')
-      .catch(err => err.response)
-      .then(res => {
-        res.should.have.status(400);
-      })
-  });
-});
-
 let floorId;
 describe("POST /floor/add", function () {
   let floorPayload ={
@@ -536,19 +497,6 @@ describe("GET /wall", function () {
         res.body[0].price.should.be.a("number");
         done();
       });
-  });
-});
-
-describe("GET /wall", function () {
-  it("should have status 400", function (done) {
-    setTimeout(done, 1000);
-    chai
-      .request(app)
-      .get('/walls')
-      .catch(err => err.response)
-      .then(res => {
-        res.should.have.status(400);
-      })
   });
 });
 
