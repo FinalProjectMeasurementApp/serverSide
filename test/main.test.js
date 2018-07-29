@@ -1,14 +1,30 @@
 const chai                             = require("chai");
 const chaiHttp                         = require("chai-http");
 const mongoose                         = require("mongoose");
-const { shape, username, wall, floor } = require("../models");
 const { areaCalculator }               = require("../controllers/areaCalculator");
-const { userCalculator }               = require("../controllers/userController");
-const { floorCalculator }              = require("../controllers/userController");
 const should                           = chai.should();
 const app                              = require("../app");
 
 chai.use(chaiHttp);
+
+describe("GET /", function () {
+  it("should succes connect database", function (done) {
+    this.timeout(5000);
+    chai
+      .request(app)
+      .get("/")
+      .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.text.should.equal("Measurement App Server");
+        done();
+      });
+  });
+});
 
 describe("GET /shape", function () {
   it("should have status 200", function (done) {
@@ -17,6 +33,10 @@ describe("GET /shape", function () {
       .request(app)
       .get("/shape")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(200);
         res.body.should.be.a("array");
         done();
@@ -28,19 +48,46 @@ describe("GET /shape", function () {
       .request(app)
       .get("/shape")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.body.should.be.a("array");
         res.body[0].name.should.be.a("string");
         res.body[0].perimeter.should.be.a("number");
         res.body[0].area.should.be.a("number");
         res.body[0].coordinates.should.be.a("array");
+        res.body[0].lengths.should.be.a("array");
         done();
       });
   });
 });
 
+describe("GET /shape", function () {
+  it("should have status 400", function (done) {
+    setTimeout(done, 1000);
+    chai
+      .request(app)
+      .get('/shapes')
+      .catch(err => err.response)
+      .then(res => {
+        res.should.have.status(400);
+      })
+  });
+});
+
 describe("POST /shape/add", function () {
-  let mockPayload = { name: "test", perimeter: 100, area: 100, coordinates: [[100]]};
-  let mockErrorPayload = { name: "test", perimeter: 100 };
+  let mockPayload = { 
+    name: "test", 
+    perimeter: 100, 
+    area: 100, 
+    coordinates: [[100]], 
+    lengths: [[10]]
+  };
+  let mockErrorPayload = { 
+    name: "test", 
+    perimeter: 100 
+  };
   let shapeId;
   it("should not add new item", function (done) {
     chai
@@ -48,6 +95,10 @@ describe("POST /shape/add", function () {
       .post("/shape/add")
       .send(mockErrorPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(400);
         res.body.should.be.a("object");
         res.body.errors.should.be.a("object");
@@ -61,6 +112,10 @@ describe("POST /shape/add", function () {
       .post("/shape/add")
       .send(mockPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         shapeId = res.body._id;
         res.should.have.status(200);
         res.body.should.be.a("object");
@@ -68,6 +123,7 @@ describe("POST /shape/add", function () {
         res.body.perimeter.should.equal(100);
         res.body.area.should.equal(100);
         res.body.coordinates.should.be.a("array");
+        res.body.lengths.should.be.a("array");
         done();
       });
   });
@@ -79,6 +135,9 @@ describe("POST /shape/add", function () {
         perimeter: "string",
         area: 200,
         coordinates: [
+          []
+        ],
+        lengths: [
           []
         ]
       };
@@ -105,6 +164,9 @@ describe("POST /shape/add", function () {
         perimeter: 200,
         coordinates: [
           [200]
+        ],
+        lengths: [
+          [200]
         ]
       };
       this.timeout(5000);
@@ -122,6 +184,7 @@ describe("POST /shape/add", function () {
           res.body.perimeter.should.equal(200);
           res.body.area.should.equal(200);
           res.body.coordinates.should.be.a("array");
+          res.body.lengths.should.be.a("array");
           done();
         });
     });
@@ -158,6 +221,7 @@ describe("POST /shape/add", function () {
           res.body.perimeter.should.equal(200);
           res.body.area.should.equal(200);
           res.body.coordinates.should.be.a("array");
+          res.body.lengths.should.be.a("array");
           done();
         });
     });
@@ -199,6 +263,10 @@ describe("GET /user", function () {
       .request(app)
       .get("/user")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(200);
         res.body.should.be.a("array");
         done();
@@ -210,10 +278,27 @@ describe("GET /user", function () {
       .request(app)
       .get("/user")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.body.should.be.a("array");
         res.body[0].username.should.be.a("string");
         done();
       });
+  });
+});
+
+describe("GET /user", function () {
+  it("should have status 400", function (done) {
+    setTimeout(done, 1000);
+    chai
+      .request(app)
+      .get('/users')
+      .catch(err => err.response)
+      .then(res => {
+        res.should.have.status(400);
+      })
   });
 });
 
@@ -232,6 +317,10 @@ describe("POST /user/add", function () {
       .post("/user/add")
       .send(userErrorPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(400);
         res.body.should.be.a("object");
         res.body.errors.should.be.a("object");
@@ -244,6 +333,10 @@ describe("POST /user/add", function () {
       .post("/user/add")
       .send(userPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         userId = res.body._id;
         res.should.have.status(200);
         res.body.should.be.a("object");
@@ -293,6 +386,10 @@ describe("GET /floor", function () {
       .request(app)
       .get("/floor")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(200);
         res.body.should.be.a("array");
         done();
@@ -304,12 +401,29 @@ describe("GET /floor", function () {
       .request(app)
       .get("/floor")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.body.should.be.a("array");
         res.body[0].type.should.be.a("string");
         res.body[0].area.should.be.a("number");
         res.body[0].price.should.be.a("number");
         done();
       });
+  });
+});
+
+describe("GET /floor", function () {
+  it("should have status 400", function (done) {
+    setTimeout(done, 1000);
+    chai
+      .request(app)
+      .get('/floors')
+      .catch(err => err.response)
+      .then(res => {
+        res.should.have.status(400);
+      })
   });
 });
 
@@ -337,6 +451,7 @@ describe("POST /floor/add", function () {
         done();
       });
   });
+
   it("should return new floor", function (done) {
     chai
       .request(app)
@@ -396,6 +511,10 @@ describe("GET /wall", function () {
       .request(app)
       .get("/wall")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(200);
         res.body.should.be.a("array");
         done();
@@ -407,12 +526,29 @@ describe("GET /wall", function () {
       .request(app)
       .get("/wall")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.body.should.be.a("array");
         res.body[0].type.should.be.a("string");
         res.body[0].area.should.be.a("number");
         res.body[0].price.should.be.a("number");
         done();
       });
+  });
+});
+
+describe("GET /wall", function () {
+  it("should have status 400", function (done) {
+    setTimeout(done, 1000);
+    chai
+      .request(app)
+      .get('/walls')
+      .catch(err => err.response)
+      .then(res => {
+        res.should.have.status(400);
+      })
   });
 });
 
@@ -434,18 +570,27 @@ describe("POST /wall/add", function () {
       .post("/wall/add")
       .send(wallErrorPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(400);
         res.body.should.be.a("object");
         res.body.errors.should.be.a("object");
         done();
       });
   });
+
   it("should return new wall", function (done) {
     chai
       .request(app)
       .post("/wall/add")
       .send(wallPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         wallId = res.body._id;
         res.should.have.status(200);
         res.body.should.be.a("object");

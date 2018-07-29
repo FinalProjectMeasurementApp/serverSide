@@ -20,7 +20,8 @@ module.exports = {
       name: req.body.name,
       area: req.body.area,
       perimeter: req.body.perimeter,
-      coordinates: req.body.coordinates
+      coordinates: req.body.coordinates,
+      lengths: req.body.lengths
     };
 
     let newShape = new Shape(shapeData);
@@ -51,7 +52,8 @@ module.exports = {
       name: req.body.name,
       area: req.body.area,
       perimeter: req.body.perimeter,
-      coordinates: req.body.coordinates
+      coordinates: req.body.coordinates,
+      lengths: req.body.lengths
     };
 
     Shape.findByIdAndUpdate(
