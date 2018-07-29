@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-
+const mongoose    = require("mongoose");
+const Schema      = mongoose.Schema;
 const floorSchema = new Schema(
   {
     type: { 

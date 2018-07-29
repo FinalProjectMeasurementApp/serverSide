@@ -1,4 +1,4 @@
-const Wall = require("../models/wall");
+const Wall     = require("../models/wall");
 
 module.exports = {
   getAllWall: (req, res, next) => {

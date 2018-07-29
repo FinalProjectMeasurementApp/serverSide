@@ -1,9 +1,9 @@
-module.exports = {
+module.exports  = {
   areaCalculator: function(arrayOfCoordinates) {
-    let area = 0;
+    let area    = 0;
     let totalCoordinates = arrayOfCoordinates.length;
     // last coordinate
-    var coordinateTwo = arrayOfCoordinates[totalCoordinates - 1];
+    let coordinateTwo    = arrayOfCoordinates[totalCoordinates - 1];
     for (let i = 0; i < totalCoordinates; i++) {
       let coordinateOne = arrayOfCoordinates[i];
       area += coordinateOne[0] * coordinateTwo[1];
