@@ -14,7 +14,20 @@ const shapeSchema = new Schema(
     perimeter: { 
       type: Number, required: true 
     },
-    coordinates: [[{type: Number, required:true}]]
+    coordinates: [
+      [
+        {
+          type: Number, required:true
+        }
+      ]
+    ],
+    lengths: [
+      [
+        {
+          type: Number, required:true
+        }
+      ]
+    ],
   },
   { 
     timestamps: true 

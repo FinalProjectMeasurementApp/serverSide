@@ -1,9 +1,11 @@
 const express = require("express");
 const router  = express.Router();
 
+const {
+  getIndex
+} = require ('../controllers/indexController')
+
 router
-  .get("/", function(req, res, next) {
-  res.send("Measurement App Server");
-});
+  .get("/", getIndex);
 
 module.exports = router;
