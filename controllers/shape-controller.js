@@ -16,10 +16,11 @@ module.exports = {
 
   addNewShapeData: (req, res, next) => {
     let shapeData = {
+      username:req.body.username,
       name: req.body.name,
       area: req.body.area,
       perimeter: req.body.perimeter,
-      coordinates: []
+      coordinates: req.body.coordinates
     };
 
     let newShape = new Shape(shapeData);
@@ -46,10 +47,11 @@ module.exports = {
 
   updateShapeData: (req, res, next) => {
     let updatedShape = {
+      username: req.body.username,
       name: req.body.name,
       area: req.body.area,
       perimeter: req.body.perimeter,
-      coordinates: []
+      coordinates: req.body.coordinates
     };
 
     Shape.findByIdAndUpdate(

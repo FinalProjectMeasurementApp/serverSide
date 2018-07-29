@@ -26,6 +26,7 @@ mongoose
   .then(() => {
     console.log("connected to db");
   });
+// mongoose.connect('mongodb://localhost:27017/measurementApp',{ useNewUrlParser: true })
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
