@@ -14,6 +14,10 @@ describe("GET /", function () {
       .request(app)
       .get("/")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(200);
         res.body.should.be.a("object");
         res.text.should.equal("Measurement App Server");
@@ -29,6 +33,10 @@ describe("GET /shape", function () {
       .request(app)
       .get("/shape")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(200);
         res.body.should.be.a("array");
         done();
@@ -40,6 +48,10 @@ describe("GET /shape", function () {
       .request(app)
       .get("/shape")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.body.should.be.a("array");
         res.body[0].name.should.be.a("string");
         res.body[0].perimeter.should.be.a("number");
@@ -83,6 +95,10 @@ describe("POST /shape/add", function () {
       .post("/shape/add")
       .send(mockErrorPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(400);
         res.body.should.be.a("object");
         res.body.errors.should.be.a("object");
@@ -96,6 +112,10 @@ describe("POST /shape/add", function () {
       .post("/shape/add")
       .send(mockPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         shapeId = res.body._id;
         res.should.have.status(200);
         res.body.should.be.a("object");
@@ -366,6 +386,10 @@ describe("GET /floor", function () {
       .request(app)
       .get("/floor")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(200);
         res.body.should.be.a("array");
         done();
@@ -377,6 +401,10 @@ describe("GET /floor", function () {
       .request(app)
       .get("/floor")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.body.should.be.a("array");
         res.body[0].type.should.be.a("string");
         res.body[0].area.should.be.a("number");
@@ -483,6 +511,10 @@ describe("GET /wall", function () {
       .request(app)
       .get("/wall")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(200);
         res.body.should.be.a("array");
         done();
@@ -494,6 +526,10 @@ describe("GET /wall", function () {
       .request(app)
       .get("/wall")
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.body.should.be.a("array");
         res.body[0].type.should.be.a("string");
         res.body[0].area.should.be.a("number");
@@ -534,6 +570,10 @@ describe("POST /wall/add", function () {
       .post("/wall/add")
       .send(wallErrorPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         res.should.have.status(400);
         res.body.should.be.a("object");
         res.body.errors.should.be.a("object");
@@ -547,6 +587,10 @@ describe("POST /wall/add", function () {
       .post("/wall/add")
       .send(wallPayload)
       .end(function (err, res) {
+        if (err) {
+          console.log(err);
+          done();
+        }
         wallId = res.body._id;
         res.should.have.status(200);
         res.body.should.be.a("object");
