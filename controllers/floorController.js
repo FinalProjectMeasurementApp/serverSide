@@ -1,4 +1,4 @@
-const Floor = require("../models/floor");
+const Floor    = require("../models/floor");
 
 module.exports = {
   getAllFloor: (req, res, next) => {

@@ -39,7 +39,7 @@ describe("GET /shape", function () {
 });
 
 describe("POST /shape/add", function () {
-  let mockPayload = { name: "test", perimeter: 100, area: 100 };
+  let mockPayload = { name: "test", perimeter: 100, area: 100, coordinates: [[100]]};
   let mockErrorPayload = { name: "test", perimeter: 100 };
   let shapeId;
   it("should not add new item", function (done) {
@@ -78,7 +78,9 @@ describe("POST /shape/add", function () {
         name: "updated test",
         perimeter: "string",
         area: 200,
-        coordinates: []
+        coordinates: [
+          []
+        ]
       };
       chai
         .request(app)
@@ -99,7 +101,11 @@ describe("POST /shape/add", function () {
       let mockUpdatePayload = {
         name: "updated test",
         perimeter: 200,
-        area: 200
+        area: 200,
+        perimeter: 200,
+        coordinates: [
+          [200]
+        ]
       };
       this.timeout(5000);
       chai
@@ -382,8 +388,6 @@ describe("DELETE /floor/delete/:floorId", function () {
       });
   });
 });
-
-//------------//
 
 describe("GET /wall", function () {
   it("should have status 200", function (done) {
