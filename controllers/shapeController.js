@@ -1,10 +1,11 @@
-const Shape    = require("../models/shape");
+const Shape = require("../models/shape");
+const mongoose = require('mongoose');
 
 module.exports = {
   getAllSavedShapes: (req, res, next) => {
     Shape
       .find({})
-      .populate("user")
+      .populate("username")
       .sort({ createdAt: "desc" })
       .then(shape => {
         res.status(200).send(shape);
@@ -15,8 +16,9 @@ module.exports = {
   },
 
   addNewShapeData: (req, res, next) => {
+    const id = mongoose.Types.ObjectId(req.body.username);
     let shapeData = {
-      username:req.body.username,
+      username: id,
       name: req.body.name,
       area: req.body.area,
       perimeter: req.body.perimeter,
@@ -47,8 +49,9 @@ module.exports = {
   },
 
   updateShapeData: (req, res, next) => {
+    const id = mongoose.Types.ObjectId(req.body.username);
     let updatedShape = {
-      username: req.body.username,
+      username: id,
       name: req.body.name,
       area: req.body.area,
       perimeter: req.body.perimeter,

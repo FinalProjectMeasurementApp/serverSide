@@ -1,36 +1,34 @@
-const mongoose    = require("mongoose");
-const Schema      = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const shapeSchema = new Schema(
   {
-    username: { 
-      type: Schema.Types.ObjectId, ref: 'User'
+    username: {
+      type: Schema.Types.ObjectId, ref: "user"
     },
-    name: { 
-      type: String, required: true 
+    name: {
+      type: String, required: true
     },
-    area: { 
-      type: Number, required: true 
+    area: {
+      type: Number, required: true
     },
-    perimeter: { 
-      type: Number, required: true 
+    perimeter: {
+      type: Number, required: true
     },
     coordinates: [
       [
         {
-          type: Number, required:true
+          type: Number, required: true
         }
       ]
     ],
     lengths: [
-      [
-        {
-          type: Number, required:true
-        }
-      ]
+      {
+        type: Number, required: true
+      }
     ],
   },
-  { 
-    timestamps: true 
+  {
+    timestamps: true
   }
 );
 

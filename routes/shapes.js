@@ -5,7 +5,7 @@ const {
   updateShapeData,
   addNewShapeData,
   deleteShapeData
-} = require ('../controllers/shape-controller')
+} = require ('../controllers/shapeController')
 
 router
   .get('/',getAllSavedShapes)
