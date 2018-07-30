@@ -3,6 +3,7 @@ const chaiHttp                         = require("chai-http");
 const mongoose                         = require("mongoose");
 const { areaCalculator }               = require("../controllers/areaCalculator");
 const should                           = chai.should();
+const expect                           = chai.expect();
 const app                              = require("../app");
 
 chai.use(chaiHttp);
@@ -69,7 +70,7 @@ describe("POST /shape/add", function () {
     perimeter: 100, 
     area: 100, 
     coordinates: [[100]], 
-    lengths: [[10]]
+    lengths: [10]
   };
   let mockErrorPayload = { 
     name: "test", 
@@ -124,9 +125,7 @@ describe("POST /shape/add", function () {
         coordinates: [
           []
         ],
-        lengths: [
-          []
-        ]
+        lengths: []
       };
       chai
         .request(app)
@@ -150,10 +149,12 @@ describe("POST /shape/add", function () {
         area: 200,
         perimeter: 200,
         coordinates: [
-          [200]
+          [
+            200
+          ]
         ],
         lengths: [
-          [200]
+          200
         ]
       };
       this.timeout(5000);
