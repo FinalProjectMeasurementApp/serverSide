@@ -18,10 +18,15 @@ const shapeRouter              = require("./routes/shapes");
 // connect mongose database
 const { DB_USER, DB_PASS }     = process.env;
 const url                      = `mongodb://${DB_USER}:${DB_PASS}@ds249311.mlab.com:49311/measurement`;
+const options                  = {
+  keepAlive: 1, connectTimeoutMS: 30000, reconnectTries: 30, reconnectInterval: 5000,
+  useNewUrlParser: true
+};
+
 mongoose
   .connect(
     url,
-    { useNewUrlParser: true }
+    options
   )
   .then(() => {
     console.log("connected to db");
