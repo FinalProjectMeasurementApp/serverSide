@@ -59,29 +59,44 @@ describe("GET /shape", function () {
         res.body[0].area.should.be.a("number");
         res.body[0].coordinates.should.be.a("array");
         res.body[0].lengths.should.be.a("array");
+        res.body[0].type.should.be.a("string");
         done();
       });
   });
 });
 
 describe("POST /shape/add", function () {
-  let mockPayload = { 
-    name: "test", 
-    perimeter: 100, 
-    area: 100, 
-    coordinates: [[100]], 
-    lengths: [10]
-  };
-  let mockErrorPayload = { 
-    name: "test", 
-    perimeter: 100 
-  };
+  const mockCoordinates = [
+    [
+      -0.06566426157951355,
+      -0.6982777118682861,
+      -0.2882850766181946
+    ],
+    [
+      -0.13190507888793945,
+      -0.7064650654792786,
+      -0.23228560388088226
+    ],
+    [
+      0.008311450481414795,
+      -0.7085081338882446,
+      -0.26130345463752747
+    ]
+  ]
+  
+  const mockLengths = [
+    0.08673976361751556,
+    0.14318767189979553,
+    0.07874270528554916
+  ]
+
   let shapeId;
   it("should not add new item", function (done) {
+    this.timeout(5000)
     chai
       .request(app)
       .post("/shape/add")
-      .send(mockErrorPayload)
+      .attach("image", "./test/e270d2a95fa5e031cef0bae8a2adc034.jpg")
       .end(function (err, res) {
         if (err) {
           console.log(err);
@@ -95,10 +110,18 @@ describe("POST /shape/add", function () {
   });
 
   it("should return new item", function (done) {
+    this.timeout(10000)
     chai
       .request(app)
       .post("/shape/add")
-      .send(mockPayload)
+      .attach("image", "./test/e270d2a95fa5e031cef0bae8a2adc034.jpg")
+      .field("name", "test")
+      .field("username", "5b5e92473d3d555ef0a4a320")
+      .field("area", 100)
+      .field("perimeter", 100)
+      .field("coordinates", mockCoordinates)
+      .field("lengths", mockLengths)
+      .field("type", "floor")
       .end(function (err, res) {
         if (err) {
           console.log(err);
@@ -112,6 +135,7 @@ describe("POST /shape/add", function () {
         res.body.area.should.equal(100);
         res.body.coordinates.should.be.a("array");
         res.body.lengths.should.be.a("array");
+        res.body.type.should.equal("floor");
         done();
       });
   });
@@ -155,7 +179,8 @@ describe("POST /shape/add", function () {
         ],
         lengths: [
           200
-        ]
+        ],
+        type: "wall"
       };
       this.timeout(5000);
       chai
@@ -173,6 +198,7 @@ describe("POST /shape/add", function () {
           res.body.area.should.equal(200);
           res.body.coordinates.should.be.a("array");
           res.body.lengths.should.be.a("array");
+          res.body.type.should.equal("wall");
           done();
         });
     });
@@ -210,6 +236,7 @@ describe("POST /shape/add", function () {
           res.body.area.should.equal(200);
           res.body.coordinates.should.be.a("array");
           res.body.lengths.should.be.a("array");
+          res.body.type.should.equal("wall");
           done();
         });
     });
