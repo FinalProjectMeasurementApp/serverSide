@@ -1,5 +1,6 @@
 const express = require('express');
 const router  = express.Router();
+const images  = require('../helpers/images')
 const {
   getAllSavedShapes,
   updateShapeData,
@@ -9,7 +10,7 @@ const {
 
 router
   .get('/',getAllSavedShapes)
-  .post('/add',addNewShapeData)
+  .post('/add',images.multer.single('image'), images.sendUploadToGCS, addNewShapeData)
   .delete('/delete/:id',deleteShapeData)
   .put('/update/:id',updateShapeData)
 
