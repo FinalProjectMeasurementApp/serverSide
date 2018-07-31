@@ -17,6 +17,16 @@ module.exports = {
 
   addNewShapeData: (req, res, next) => {
     const id = mongoose.Types.ObjectId(req.body.username);
+    for (let i = 0; i < req.body.coordinates.length; i++) {
+      req.body.coordinates[i][0] = +req.body.coordinates[i][0]
+      req.body.coordinates[i][1] = +req.body.coordinates[i][1]
+      req.body.coordinates[i][2] = +req.body.coordinates[i][2]
+    }
+    for (let i = 0; i < req.body.lengths.length; i++) {
+      req.body.lengths[i] = +req.body.lengths[i]
+    }
+    req.body.area = +req.body.area
+    req.body.perimeter = +req.body.perimeter
     let shapeData = {
       username: id,
       name: req.body.name,
@@ -55,10 +65,10 @@ module.exports = {
     let updatedShape = {
       username: id,
       name: req.body.name,
-      area: req.body.area,
-      perimeter: req.body.perimeter,
-      coordinates: req.body.coordinates,
-      lengths: req.body.lengths,
+      area: +req.body.area,
+      perimeter: +req.body.perimeter,
+      coordinates: +req.body.coordinates,
+      lengths: +req.body.lengths,
       image: req.body.image,
       type: req.body.type
     };
