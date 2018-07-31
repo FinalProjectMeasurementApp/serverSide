@@ -1,11 +1,18 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose    = require('mongoose');
+const Schema      = mongoose.Schema;
 const shapeSchema = new Schema(
   {
     username: {
       type: Schema.Types.ObjectId, ref: "user"
     },
     name: {
+      type: String, required: true
+    },
+    image: {
+      type: String,
+      default: 'https://jnaengineering.co.za/images/no_product.png'
+    },
+    type: {
       type: String, required: true
     },
     area: {
