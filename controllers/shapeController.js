@@ -1,4 +1,4 @@
-const Shape = require("../models/shape");
+const Shape    = require("../models/shape");
 const mongoose = require('mongoose');
 
 module.exports = {
@@ -23,7 +23,9 @@ module.exports = {
       area: req.body.area,
       perimeter: req.body.perimeter,
       coordinates: req.body.coordinates,
-      lengths: req.body.lengths
+      lengths: req.body.lengths,
+      image: req.file.cloudStoragePublicUrl,
+      type: req.body.type
     };
 
     let newShape = new Shape(shapeData);
@@ -56,7 +58,9 @@ module.exports = {
       area: req.body.area,
       perimeter: req.body.perimeter,
       coordinates: req.body.coordinates,
-      lengths: req.body.lengths
+      lengths: req.body.lengths,
+      image: req.body.image,
+      type: req.body.type
     };
 
     Shape.findByIdAndUpdate(
