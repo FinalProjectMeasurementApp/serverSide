@@ -1,16 +1,18 @@
 const express = require('express');
-const router  = express.Router();
-const images  = require('../helpers/images')
+const router = express.Router();
+const upload = require("../helpers/multer");
 const {
+  uploadImage,
   getAllSavedShapes,
   updateShapeData,
   addNewShapeData,
   deleteShapeData
-} = require ('../controllers/shapeController')
+} = require('../controllers/shapeController')
 
 router
-  .get('/',getAllSavedShapes)
-  .post('/add',images.multer.single('image'), images.sendUploadToGCS, addNewShapeData)
+  .get('/', getAllSavedShapes)
+  .post('/upload', upload.single('image'), uploadImage)
+  .post('/add',upload.single('image'), addNewShapeData)
   .delete('/delete/:id',deleteShapeData)
   .put('/update/:id',updateShapeData)
 

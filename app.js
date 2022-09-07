@@ -2,7 +2,6 @@ require("dotenv").config({ path: "./.env" });
 const createError              = require("http-errors");
 const express                  = require("express");
 const app                      = express();
-const mongoose                 = require("mongoose");
 const path                     = require("path");
 const cookieParser             = require("cookie-parser");
 const logger                   = require("morgan");
@@ -16,21 +15,24 @@ const usersRouter              = require("./routes/users");
 const shapeRouter              = require("./routes/shapes");
 
 // connect mongose database
-const { DB_USER, DB_PASS }     = process.env;
-const url                      = `mongodb://${DB_USER}:${DB_PASS}@ds249311.mlab.com:49311/measurement`;
-const options                  = {
-  keepAlive: 1, connectTimeoutMS: 30000, reconnectTries: 30, reconnectInterval: 5000,
-  useNewUrlParser: true
-};
+const usermongo = process.env.USERMONGO;
+const passmongo = process.env.PASSMONGO;
+const mongoose  = require('mongoose');
+const dbUrl     = `mongodb+srv://${usermongo}:${passmongo}@cluster0.rriocxj.mongodb.net/rular?retryWrites=true&w=majority`
+mongoose.connect(dbUrl, {
+  useNewUrlParser   : true,
+  useUnifiedTopology: true,
+  keepAlive: true,
+  connectTimeoutMS: 30000,
+  maxPoolSize: 30,
+  socketTimeoutMS: 5000,
+});
 
-mongoose
-  .connect(
-    url,
-    options
-  )
-  .then(() => {
-    console.log("connected to db");
-  });
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error: "));
+db.once("open", function () {
+  console.log('success connected to database');
+});
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

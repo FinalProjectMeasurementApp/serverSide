@@ -1,5 +1,5 @@
 const index = {
-  text: "Measurement App Server"
+  text: "Rular App Server"
 }
 
 module.exports = index;

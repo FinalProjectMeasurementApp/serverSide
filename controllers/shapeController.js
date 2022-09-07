@@ -1,5 +1,6 @@
 const Shape    = require("../models/shape");
 const mongoose = require('mongoose');
+const { cloudinary } = require("../helpers/cloudinary");
 
 module.exports = {
   getAllSavedShapes: (req, res, next) => {
@@ -15,7 +16,37 @@ module.exports = {
       });
   },
 
-  addNewShapeData: (req, res, next) => {
+  uploadImage: async (req, res) => {
+		const file = req.file.path;
+		const options = {
+			resource_type: "auto",
+			unsigned: true,
+			upload_preset: 'cloud-rular',
+			public_id: req.body.title,
+			tags: req.body.title
+		}
+		const image = await cloudinary.uploader.upload(file, options);
+		console.log("result: ", image);
+		const imgUrl = image.secure_url
+		res.status(200).json({
+			imgUrl,
+			status: 200,
+			message: 'Your image is successfully uploaded',
+		});
+	},
+
+  addNewShapeData: async (req, res, next) => {
+    const file = req.file.path;
+		const options = {
+			resource_type: "auto",
+			unsigned: true,
+			upload_preset: process.env.UPLOAD_PRESET,
+			public_id: req.body.title,
+			tags: req.body.title
+		}
+		const image = await cloudinary.uploader.upload(file, options);
+		console.log("result: ", image);
+		const imgUrl = image.secure_url
     const id = mongoose.Types.ObjectId(req.body.username);
     for (let i = 0; i < req.body.coordinates.length; i++) {
       req.body.coordinates[i][0] = +req.body.coordinates[i][0]
@@ -34,7 +65,7 @@ module.exports = {
       perimeter: req.body.perimeter,
       coordinates: req.body.coordinates,
       lengths: req.body.lengths,
-      image: req.file.cloudStoragePublicUrl,
+      image: imgUrl,
       type: req.body.type
     };
 
