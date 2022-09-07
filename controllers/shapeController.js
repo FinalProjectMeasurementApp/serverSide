@@ -21,7 +21,7 @@ module.exports = {
 		const options = {
 			resource_type: "auto",
 			unsigned: true,
-			upload_preset: 'cloud-rular',
+			upload_preset: process.env.UPLOAD_PRESET,
 			public_id: req.body.title,
 			tags: req.body.title
 		}
